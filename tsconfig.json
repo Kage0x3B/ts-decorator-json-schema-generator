@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "outDir": "./lib/esm",
+    "module": "ES2015",
+    "declaration": true,
+    "lib": ["ESNext"],
+    "baseUrl": "./src",
+    "rootDir": "./src",
+    "strict": true,
+    "moduleResolution": "node",
+    "forceConsistentCasingInFileNames": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "declarationMap": true
+  },
+  "include": ["./src/**/*"]
+}
