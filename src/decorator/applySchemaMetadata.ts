@@ -1,9 +1,11 @@
 // noinspection JSMismatchedCollectionQueryUpdate
 
 import { SchemaMetadata, SchemaMetadataOptions, SchemaMetadataValue } from './SchemaMetadata';
-import { propertyNameListKey, schemaMetadataListKey } from './MetadataKeys';
+import { propertyNameListKey, schemaMetadataListKey, typeMetadataKey } from './MetadataKeys';
 import { Constructable } from '../util/Constructable';
-import { JSONSchema7 } from 'json-schema';
+import { JSONSchema7, JSONSchema7TypeName } from 'json-schema';
+
+export type TypeMetadata = { typeName: JSONSchema7TypeName | JSONSchema7TypeName[]; typeClass?: Constructable<any> };
 
 export function applySchemaMetadata(options: SchemaMetadataOptions) {
     return applySchemaMetadataList(new SchemaMetadata(options));
@@ -19,6 +21,12 @@ export function applyPropertySchemaMetadata<
             value: value as unknown as SchemaMetadataValue
         })
     );
+}
+
+export function applyCustomTypeMetadata(typeMetadata: TypeMetadata) {
+    return (target: any, propertyKey: string) => {
+        Reflect.defineMetadata(typeMetadataKey, typeMetadata, target, propertyKey);
+    };
 }
 
 export function applySchemaMetadataList(...metadataList: SchemaMetadata[]) {

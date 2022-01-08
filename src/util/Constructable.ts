@@ -7,4 +7,6 @@
  * }
  * ```
  */
-export type Constructable<T> = new (...args: any[]) => T;
+export interface Constructable<T> extends Function {
+    new (...args: any[]): T;
+}

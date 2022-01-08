@@ -1,4 +1,16 @@
-import { applyPropertySchemaMetadata } from '../applySchemaMetadata';
+import { applyCustomTypeMetadata } from '../applySchemaMetadata';
 import { JSONSchema7TypeName } from 'json-schema';
+import { Constructable } from '../../util/Constructable';
 
-export const Type = (value: JSONSchema7TypeName | JSONSchema7TypeName[]) => applyPropertySchemaMetadata('type', value);
+export const Type = (typeNameOrClass: Constructable<any> | (JSONSchema7TypeName | JSONSchema7TypeName[])) => {
+    if (typeof typeNameOrClass === 'function') {
+        return applyCustomTypeMetadata({
+            typeClass: typeNameOrClass,
+            typeName: 'object'
+        });
+    } else {
+        return applyCustomTypeMetadata({
+            typeName: typeNameOrClass
+        });
+    }
+};

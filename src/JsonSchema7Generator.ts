@@ -1,7 +1,6 @@
-import 'reflect-metadata';
 import { Constructable } from './util/Constructable';
-import { JSONSchema7, JSONSchema7TypeName } from 'json-schema';
-import { propertyNameListKey, SchemaMetadata, schemaMetadataListKey } from './decorator';
+import { JSONSchema7 } from 'json-schema';
+import { propertyNameListKey, SchemaMetadata, schemaMetadataListKey, TypeMetadata, typeMetadataKey } from './decorator';
 import { parseTypeName } from './util/util';
 
 export function generateJsonSchema(sourceClass: Constructable<any>): JSONSchema7 {
@@ -47,11 +46,8 @@ function applyMetadata(
         const { typeName, typeClass } = extractTypeProperty(classPrototype, propertyKey);
         schema.type = typeName;
 
-        if (typeName === 'object') {
-            schema = {
-                ...schema,
-                ...generateObjectSchema(typeClass.prototype, generatorDepth + 1)
-            };
+        if (typeName === 'object' && typeClass) {
+            Object.assign(schema, generateObjectSchema(typeClass.prototype, generatorDepth + 1));
         }
     }
 
@@ -70,14 +66,20 @@ function applyMetadata(
     }
 }
 
-function extractTypeProperty(
-    classPrototype: any,
-    propertyKey: string
-): { typeName: JSONSchema7TypeName; typeClass: Constructable<any> } {
+function extractTypeProperty(classPrototype: any, propertyKey: string): TypeMetadata {
     const typeMetadata: Constructable<any> = Reflect.getMetadata('design:type', classPrototype, propertyKey);
+    const customTypeMetadata: TypeMetadata | undefined = Reflect.getMetadata(
+        typeMetadataKey,
+        classPrototype,
+        propertyKey
+    );
 
-    return {
-        typeName: parseTypeName(typeMetadata),
-        typeClass: typeMetadata
-    };
+    if (customTypeMetadata) {
+        return customTypeMetadata;
+    } else {
+        return {
+            typeName: parseTypeName(typeMetadata),
+            typeClass: typeMetadata
+        };
+    }
 }

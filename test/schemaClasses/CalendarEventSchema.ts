@@ -1,4 +1,4 @@
-import { Description, JsonSchema, Optional, Required } from '../../src';
+import { Description, JsonSchema, Optional, Required, Type } from '../../src';
 import { GeoLocationSchema } from './GeoLocationSchema';
 
 @JsonSchema({
@@ -42,5 +42,6 @@ export class CalendarEventSchema {
     public description?: string;
 
     @Optional()
+    @Type(GeoLocationSchema)
     public geoLocation?: GeoLocationSchema;
 }
