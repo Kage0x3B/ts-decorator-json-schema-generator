@@ -45,7 +45,6 @@ export class SchemaMetadata {
         if (this.schemaDecorator) {
             this.schemaDecorator(schema);
         }
-        console.log(schema);
     }
 
     public applyToParent(parentSchema: JSONSchema7, propertyKey: string): void {
