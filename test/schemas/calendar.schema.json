@@ -1,0 +1,64 @@
+{
+    "$id": "https://example.com/calendar.schema.json",
+    "$schema": "https://json-schema.org/draft-07/schema",
+    "description": "A representation of an event",
+    "type": "object",
+    "required": ["startDate", "summary"],
+    "properties": {
+        "startDate": {
+            "type": "string",
+            "description": "Event starting time"
+        },
+        "endDate": {
+            "type": "string",
+            "description": "Event ending time"
+        },
+        "summary": {
+            "type": "string"
+        },
+        "location": {
+            "type": "string"
+        },
+        "url": {
+            "type": "string"
+        },
+        "duration": {
+            "type": "string",
+            "description": "Event duration"
+        },
+        "recurrenceDate": {
+            "type": "string",
+            "description": "Recurrence date"
+        },
+        "recurrenceRule": {
+            "type": "string",
+            "description": "Recurrence rule"
+        },
+        "category": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "geo": {
+            "$id": "https://example.com/geographical-location.schema.json",
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "title": "Longitude and Latitude Values",
+            "description": "A geographical coordinate.",
+            "type": "object",
+            "properties": {
+                "latitude": {
+                    "type": "number",
+                    "minimum": -90,
+                    "maximum": 90
+                },
+                "longitude": {
+                    "type": "number",
+                    "minimum": -180,
+                    "maximum": 180
+                }
+            },
+            "required": ["latitude", "longitude"]
+        }
+    }
+}

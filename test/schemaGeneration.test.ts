@@ -1,16 +1,17 @@
-import { AddonEventType, enumValues } from 'paralo-common';
-import axios from 'axios';
-
-jest.mock('axios');
-// @ts-ignore
-(axios.isAxiosError as unknown as jest.Mock<typeof axios.isAxiosError>).mockResolvedValue(true);
+import { generateJsonSchema } from '../src';
+import { AddressSchema } from './schemaClasses/AddressSchema';
+import addressSchemaJson from './schemas/address.schema.json';
+import calendarEventSchemaJson from './schemas/calendar.schema.json';
+import { CalendarEventSchema } from './schemaClasses/CalendarEventSchema';
 
 describe('Generate test schemas', () => {
-    test('Test AddressSchema', async () => {
-        await consumerService.registerAddonEvents();
+    test('Test AddressSchema', () => {
+        const generatedSchema = generateJsonSchema(AddressSchema);
+        expect(generatedSchema).toEqual(addressSchemaJson);
+    });
 
-        for (const eventType of enumValues(AddonEventType)) {
-            expect(channel.listenerCount(eventType)).toEqual(1);
-        }
+    test('Test CalendarEventSchema', () => {
+        const generatedSchema = generateJsonSchema(CalendarEventSchema);
+        expect(generatedSchema).toEqual(calendarEventSchemaJson);
     });
 });

@@ -8,6 +8,7 @@
         "baseUrl": "./src",
         "strict": true,
         "moduleResolution": "node",
+        "resolveJsonModule": true,
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
         "emitDecoratorMetadata": true,

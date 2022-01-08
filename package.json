@@ -10,7 +10,7 @@
         "build:esm": "tsc",
         "build:cjs": "tsc -p tsconfig-cjs.json",
         "build": "npm run build:esm && npm run build:cjs",
-        "test": "jest test/**/*.test.ts",
+        "test": "jest test/*.test.ts",
         "preinstall": "npx only-allow pnpm"
     },
     "repository": {
