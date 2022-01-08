@@ -1,8 +1,7 @@
 import 'reflect-metadata';
 import { Constructable } from './util/Constructable';
 import { JSONSchema7, JSONSchema7TypeName } from 'json-schema';
-import { propertyNameListKey, schemaMetadataListKey } from './decorator/MetadataKeys';
-import { SchemaMetadata } from './decorator/SchemaMetadata';
+import { propertyNameListKey, SchemaMetadata, schemaMetadataListKey } from './decorator';
 import { parseTypeName } from './util/util';
 
 export function generateJsonSchema(sourceClass: Constructable<any>): JSONSchema7 {
@@ -15,7 +14,7 @@ export function generateObjectSchema(classPrototype: any, depth = 0): JSONSchema
     };
 
     if (depth === 0) {
-        schema.$schema = 'http://json-schema.org/draft-07/schema';
+        schema.$schema = 'https://json-schema.org/draft-07/schema';
     }
 
     const propertyList: Set<string> = Reflect.getMetadata(propertyNameListKey, classPrototype);
