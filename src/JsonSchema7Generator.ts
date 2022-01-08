@@ -1,24 +1,84 @@
+import 'reflect-metadata';
 import { Constructable } from './util/Constructable';
-import { JSONSchema7, JSONSchema7Object } from 'json-schema';
+import { JSONSchema7, JSONSchema7TypeName } from 'json-schema';
+import { propertyNameListKey, schemaMetadataListKey } from './decorator/MetadataKeys';
+import { SchemaMetadata } from './decorator/SchemaMetadata';
+import { parseTypeName } from './util/util';
 
-export class JsonSchemaGenerator {
-    private sourceClass: Constructable<any>;
+export function generateJsonSchema(sourceClass: Constructable<any>): JSONSchema7 {
+    return generateObjectSchema(sourceClass.prototype);
+}
 
-    constructor(sourceClass: Constructable<any>) {
-        this.sourceClass = sourceClass;
+export function generateObjectSchema(classPrototype: any, depth = 0): JSONSchema7 {
+    const schema: JSONSchema7 = {
+        type: 'object'
+    };
+
+    if (depth === 0) {
+        schema.$schema = 'https://json-schema.org/draft/2020-12/schema';
     }
 
-    public generateJsonSchema(): JSONSchema7 {
-        return {};
+    const propertyList: Set<string> = Reflect.getMetadata(propertyNameListKey, classPrototype);
+
+    applyMetadata(depth, schema, classPrototype);
+
+    if (propertyList) {
+        schema.properties = {};
+
+        for (const propertyKey of propertyList) {
+            const propertySchema: JSONSchema7 = {};
+
+            applyMetadata(depth, propertySchema, classPrototype, schema, propertyKey);
+
+            schema.properties[propertyKey] = propertySchema;
+        }
     }
 
-    public generateObjectSchema(): JSONSchema7Object {
-        return {};
+    return schema;
+}
+
+function applyMetadata(
+    generatorDepth: number,
+    schema: JSONSchema7,
+    classPrototype: any,
+    parentSchema?: JSONSchema7,
+    propertyKey?: string
+) {
+    if (propertyKey) {
+        const { typeName, typeClass } = extractTypeProperty(classPrototype, propertyKey);
+        schema.type = typeName;
+
+        if (typeName === 'object') {
+            schema = {
+                ...schema,
+                ...generateObjectSchema(typeClass.prototype, generatorDepth + 1)
+            };
+        }
+    }
+
+    const propertyMetadataList: Set<SchemaMetadata> = propertyKey
+        ? Reflect.getMetadata(schemaMetadataListKey, classPrototype, propertyKey)
+        : Reflect.getMetadata(schemaMetadataListKey, classPrototype);
+
+    if (propertyMetadataList) {
+        for (const schemaMetadata of propertyMetadataList) {
+            schemaMetadata.apply(schema);
+
+            if (parentSchema && propertyKey) {
+                schemaMetadata.applyToParent(parentSchema, propertyKey);
+            }
+        }
     }
 }
 
-export function generateJsonSchema(sourceClass: Constructable<any>): JSONSchema7 {
-    const schemaGenerator = new JsonSchemaGenerator(sourceClass);
+function extractTypeProperty(
+    classPrototype: any,
+    propertyKey: string
+): { typeName: JSONSchema7TypeName; typeClass: Constructable<any> } {
+    const typeMetadata: Constructable<any> = Reflect.getMetadata('design:type', classPrototype, propertyKey);
 
-    return schemaGenerator.generateJsonSchema();
+    return {
+        typeName: parseTypeName(typeMetadata),
+        typeClass: typeMetadata
+    };
 }
