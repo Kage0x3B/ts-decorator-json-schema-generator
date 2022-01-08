@@ -15,7 +15,7 @@ export function generateObjectSchema(classPrototype: any, depth = 0): JSONSchema
     };
 
     if (depth === 0) {
-        schema.$schema = 'https://json-schema.org/draft/2020-12/schema';
+        schema.$schema = 'http://json-schema.org/draft-07/schema';
     }
 
     const propertyList: Set<string> = Reflect.getMetadata(propertyNameListKey, classPrototype);
