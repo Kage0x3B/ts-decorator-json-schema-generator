@@ -1,14 +1,24 @@
 import { applySchemaMetadataClass } from '../applySchemaMetadata';
-import { JSONSchema7 } from 'json-schema';
 
-type BaseJsonSchemaOptions = Pick<JSONSchema7, '$id' | 'title' | 'description'>;
+type BaseJsonSchemaOptions = {
+    id: string;
+    title: string;
+    description: string;
+};
 
-export const JsonSchema = (options: BaseJsonSchemaOptions) =>
+export const JsonSchema = (options: Partial<BaseJsonSchemaOptions>) =>
     applySchemaMetadataClass({
         schemaDecorator: (schema) => {
-            for (const key of Object.keys(options)) {
-                // @ts-ignore
-                schema[key] = options[key];
+            if (options.id) {
+                schema.$id = options.id;
+            }
+
+            if (options.title) {
+                schema.title = options.title;
+            }
+
+            if (options.description) {
+                schema.description = options.description;
             }
         }
     });
