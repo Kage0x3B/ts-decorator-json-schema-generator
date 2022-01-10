@@ -1,5 +1,5 @@
 {
-    "name": "ts-json-schema-generator",
+    "name": "ts-decorator-json-schema-generator",
     "version": "1.0.0",
     "description": "",
     "main": "lib/cjs/index.js",
