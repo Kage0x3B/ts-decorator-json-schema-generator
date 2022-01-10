@@ -1,7 +1,5 @@
 # ts-decorator-json-schema-generator
 
----
-
 Generate JSON-Schemas from typescript classes annotated with decorators.
 
 ## Installation
