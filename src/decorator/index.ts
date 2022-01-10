@@ -1,3 +1,4 @@
+export * from './array/Items';
 export * from './array/MaxItems';
 export * from './array/MinItems';
 export * from './array/UniqueItems';

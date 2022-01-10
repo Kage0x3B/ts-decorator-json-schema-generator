@@ -1,5 +1,4 @@
-import { JsonSchema, Required } from '../../src';
-import { Items } from '../../src/decorator/array/Items';
+import { Items, JsonSchema, Required } from '../../src';
 
 @JsonSchema({
     id: 'https://example.com/some-schema.schema.json'
