@@ -1,0 +1,14 @@
+{
+    "$id": "https://example.com/inheritance-2.schema.json",
+    "$schema": "https://json-schema.org/draft-07/schema",
+    "type": "object",
+    "properties": {
+        "parentProperty": {
+            "type": "string"
+        },
+        "differentChildProperty": {
+            "type": "number"
+        }
+    },
+    "required": ["parentProperty", "differentChildProperty"]
+}
