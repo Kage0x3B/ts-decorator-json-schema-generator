@@ -1,3 +1,3 @@
-export const propertyNameListKey = Symbol('propertyNameList');
-export const schemaMetadataListKey = Symbol('jsonSchemaMetadataList');
-export const typeMetadataKey = Symbol('jsonSchemaTypeMetadata');
+export const propertyNameListKey = 'ts-json-schema:propertyNameList';
+export const schemaMetadataListKey = 'ts-json-schema:jsonSchemaMetadataList';
+export const typeMetadataKey = 'ts-json-schema:jsonSchemaTypeMetadata';

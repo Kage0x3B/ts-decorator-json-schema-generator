@@ -30,3 +30,7 @@ export function enumKeys<O extends object, K extends keyof O = keyof O>(obj: O):
 export function enumValues<O extends object>(obj: O): O[keyof O][] {
     return enumKeys(obj).map((key) => obj[key]);
 }
+
+export function hasSuperClass(classPrototype: any) {
+    return Object.getPrototypeOf(classPrototype) !== Object.prototype;
+}

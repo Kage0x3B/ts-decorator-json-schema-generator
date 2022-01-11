@@ -52,7 +52,7 @@ export function applySchemaMetadataListClass(...metadataList: SchemaMetadata[]) 
 // eslint-disable-next-line @typescript-eslint/ban-types
 function appendMetadataList<T>(metadataKey: any, metadataList: T[], target: Object, propertyKey?: string | symbol) {
     if (propertyKey) {
-        const schemaMetadataList: Set<T> = Reflect.getMetadata(metadataKey, target, propertyKey);
+        const schemaMetadataList: Set<T> = Reflect.getOwnMetadata(metadataKey, target, propertyKey);
 
         if (schemaMetadataList) {
             metadataList.forEach((m) => schemaMetadataList.add(m));
@@ -60,7 +60,7 @@ function appendMetadataList<T>(metadataKey: any, metadataList: T[], target: Obje
             Reflect.defineMetadata(metadataKey, new Set(metadataList), target, propertyKey);
         }
     } else {
-        const schemaMetadataList: Set<T> = Reflect.getMetadata(metadataKey, target);
+        const schemaMetadataList: Set<T> = Reflect.getOwnMetadata(metadataKey, target);
 
         if (schemaMetadataList) {
             metadataList.forEach((m) => schemaMetadataList.add(m));

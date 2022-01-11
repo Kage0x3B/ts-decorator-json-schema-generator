@@ -1,14 +1,14 @@
 import { Constructable } from './util/Constructable';
 import { JSONSchema7 } from 'json-schema';
 import { propertyNameListKey, SchemaMetadata, schemaMetadataListKey, TypeMetadata, typeMetadataKey } from './decorator';
-import { parseTypeName } from './util/util';
+import { hasSuperClass, parseTypeName } from './util/util';
 
 export function generateJsonSchema(sourceClass: Constructable<any>): JSONSchema7 {
     return generateObjectSchema(sourceClass.prototype);
 }
 
 export function generateObjectSchema(classPrototype: any, depth = 0): JSONSchema7 {
-    const schema: JSONSchema7 = {
+    let schema: JSONSchema7 = {
         type: 'object'
     };
 
@@ -16,7 +16,7 @@ export function generateObjectSchema(classPrototype: any, depth = 0): JSONSchema
         schema.$schema = 'https://json-schema.org/draft-07/schema';
     }
 
-    const propertyList: Set<string> = Reflect.getMetadata(propertyNameListKey, classPrototype);
+    const propertyList: Set<string> = Reflect.getOwnMetadata(propertyNameListKey, classPrototype);
 
     applyMetadata(depth, schema, classPrototype);
 
@@ -30,6 +30,12 @@ export function generateObjectSchema(classPrototype: any, depth = 0): JSONSchema
 
             schema.properties[propertyKey] = propertySchema;
         }
+    }
+
+    if (hasSuperClass(classPrototype)) {
+        const superClassSchema = generateObjectSchema(Object.getPrototypeOf(classPrototype));
+
+        applySuperClassSchema(schema, superClassSchema);
     }
 
     return schema;
@@ -52,8 +58,8 @@ function applyMetadata(
     }
 
     const propertyMetadataList: Set<SchemaMetadata> = propertyKey
-        ? Reflect.getMetadata(schemaMetadataListKey, classPrototype, propertyKey)
-        : Reflect.getMetadata(schemaMetadataListKey, classPrototype);
+        ? Reflect.getOwnMetadata(schemaMetadataListKey, classPrototype, propertyKey)
+        : Reflect.getOwnMetadata(schemaMetadataListKey, classPrototype);
 
     if (propertyMetadataList) {
         for (const schemaMetadata of propertyMetadataList) {
@@ -67,8 +73,8 @@ function applyMetadata(
 }
 
 function extractTypeProperty(classPrototype: any, propertyKey: string): TypeMetadata {
-    const typeMetadata: Constructable<any> = Reflect.getMetadata('design:type', classPrototype, propertyKey);
-    const customTypeMetadata: TypeMetadata | undefined = Reflect.getMetadata(
+    const typeMetadata: Constructable<any> = Reflect.getOwnMetadata('design:type', classPrototype, propertyKey);
+    const customTypeMetadata: TypeMetadata | undefined = Reflect.getOwnMetadata(
         typeMetadataKey,
         classPrototype,
         propertyKey
@@ -81,5 +87,20 @@ function extractTypeProperty(classPrototype: any, propertyKey: string): TypeMeta
             typeName: parseTypeName(typeMetadata),
             typeClass: typeMetadata
         };
+    }
+}
+
+function applySuperClassSchema(schema: JSONSchema7, superClassSchema: JSONSchema7) {
+    schema.properties = {
+        ...superClassSchema.properties,
+        ...schema.properties
+    };
+
+    if (superClassSchema.required && superClassSchema.required.length) {
+        schema.required = [...superClassSchema.required, ...(schema.required ? schema.required : [])];
+    }
+
+    if (superClassSchema.dependencies) {
+        Object.assign(schema.dependencies, superClassSchema.dependencies);
     }
 }
