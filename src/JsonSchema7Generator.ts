@@ -8,7 +8,7 @@ export function generateJsonSchema(sourceClass: Constructable<any>): JSONSchema7
 }
 
 export function generateObjectSchema(classPrototype: any, depth = 0): JSONSchema7 {
-    let schema: JSONSchema7 = {
+    const schema: JSONSchema7 = {
         type: 'object'
     };
 
@@ -52,7 +52,7 @@ function applyMetadata(
         const { typeName, typeClass } = extractTypeProperty(classPrototype, propertyKey);
         schema.type = typeName;
 
-        if (typeName === 'object' && typeClass) {
+        if (typeName === 'object' && typeClass && typeClass.prototype) {
             Object.assign(schema, generateObjectSchema(typeClass.prototype, generatorDepth + 1));
         }
     }
