@@ -53,6 +53,12 @@ function applyMetadata(
         schema.type = typeName;
 
         if (typeName === 'object' && typeClass && typeClass.prototype) {
+            if (typeClass === Object) {
+                throw new Error(
+                    `Unknown type on property called '${propertyKey}', please manually use the @Type decorator on it.`
+                );
+            }
+
             Object.assign(schema, generateObjectSchema(typeClass.prototype, generatorDepth + 1));
         }
     }
