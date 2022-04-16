@@ -1,7 +1,7 @@
 import { Constructable } from './util/Constructable';
 import { JSONSchema7 } from 'json-schema';
 import { propertyNameListKey, SchemaMetadata, schemaMetadataListKey, TypeMetadata, typeMetadataKey } from './decorator';
-import { hasSuperClass, parseTypeName } from './util/util';
+import { hasSuperClass, isConstructor, parseTypeName } from './util/util';
 
 type SubschemaIncludeType = 'full' | 'anonymously' | 'reference';
 
@@ -13,6 +13,17 @@ export function generateJsonSchema(sourceClass: Constructable<any>, options?: Sc
     return generateObjectSchema(sourceClass.prototype, {
         includeSubschemas: options?.includeSubschemas ?? 'full'
     });
+}
+
+export function isSchemaClass(obj: unknown): obj is Constructable<any> {
+    if (!isConstructor(obj)) {
+        return false;
+    }
+
+    const propertyList: Set<string> = Reflect.getOwnMetadata(propertyNameListKey, obj.prototype);
+    const propertyMetadataList: Set<SchemaMetadata> = Reflect.getOwnMetadata(schemaMetadataListKey, obj.prototype);
+
+    return (!!propertyList && !!propertyList.size) || (!!propertyMetadataList && !!propertyMetadataList.size);
 }
 
 export function generateObjectSchema(classPrototype: any, options: SchemaGeneratorOptions, depth = 0): JSONSchema7 {

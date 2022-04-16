@@ -1,4 +1,4 @@
-import { generateJsonSchema } from '../src';
+import { generateJsonSchema, isSchemaClass } from '../src';
 import { AddressSchema } from './schemaClasses/AddressSchema';
 import addressSchemaJson from './schemas/address.schema.json';
 import calendarEventSchemaJson from './schemas/calendar.schema.json';
@@ -11,6 +11,8 @@ import { CalendarEventSchema } from './schemaClasses/CalendarEventSchema';
 import { ArrayTestSchema } from './schemaClasses/ArrayTestSchema';
 import { ChildSchema } from './schemaClasses/ChildSchema';
 import { SecondChildSchema } from './schemaClasses/SecondChildSchema';
+import { NotSchemaClass } from './schemaClasses/NotSchemaClass';
+import { NoPropertySchemaClass } from './schemaClasses/NoPropertySchemaClass';
 
 describe('Generate test schemas', () => {
     test('Test AddressSchema', () => {
@@ -46,5 +48,20 @@ describe('Generate test schemas', () => {
             includeSubschemas: 'reference'
         });
         expect(generatedSchema2).toEqual(subschemaIncludeSchema2Json);
+    });
+
+    test('Test isSchemaClass function', () => {
+        expect(isSchemaClass(undefined)).toEqual(false);
+        expect(isSchemaClass(null)).toEqual(false);
+        expect(isSchemaClass(42)).toEqual(false);
+        expect(isSchemaClass('Test!')).toEqual(false);
+        expect(isSchemaClass(NotSchemaClass)).toEqual(false);
+
+        expect(isSchemaClass(AddressSchema)).toEqual(true);
+        expect(isSchemaClass(CalendarEventSchema)).toEqual(true);
+        expect(isSchemaClass(ArrayTestSchema)).toEqual(true);
+        expect(isSchemaClass(ChildSchema)).toEqual(true);
+        expect(isSchemaClass(SecondChildSchema)).toEqual(true);
+        expect(isSchemaClass(NoPropertySchemaClass)).toEqual(true);
     });
 });

@@ -1,4 +1,5 @@
 import { JSONSchema7TypeName } from 'json-schema';
+import { Constructable } from './Constructable';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function hasOwnProperty<X extends {}, Y extends PropertyKey>(obj: X, prop: Y): obj is X & Record<Y, unknown> {
@@ -33,4 +34,13 @@ export function enumValues<O extends object>(obj: O): O[keyof O][] {
 
 export function hasSuperClass(classPrototype: any) {
     return Object.getPrototypeOf(classPrototype) !== Object.prototype;
+}
+
+export function isConstructor(func: unknown): func is Constructable<any> {
+    try {
+        Reflect.construct(String, [], func as Function);
+    } catch (e) {
+        return false;
+    }
+    return true;
 }
