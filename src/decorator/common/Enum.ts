@@ -22,7 +22,7 @@ function guessEnumValueType(enumClass: EnumType): JSONSchema7TypeName {
 
 export const Enum = (enumClass: EnumType, valueType?: 'string' | 'number' | 'integer') =>
     applySchemaMetadata({
-        schemaDecorator: (schema) => {
+        schemaDecorator: (options, schema) => {
             schema.type = valueType || guessEnumValueType(enumClass);
             schema.enum = enumValues(enumClass);
         }

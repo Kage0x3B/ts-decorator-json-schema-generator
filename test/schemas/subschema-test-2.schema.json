@@ -1,0 +1,20 @@
+{
+    "$id": "https://example.com/array-test.schema.json",
+    "$schema": "https://json-schema.org/draft-07/schema",
+    "type": "object",
+    "properties": {
+        "objectArray": {
+            "type": "array",
+            "items": {
+                "$ref": "https://example.com/some-schema.schema.json"
+            }
+        },
+        "primitiveArray": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        }
+    },
+    "required": ["objectArray", "primitiveArray"]
+}

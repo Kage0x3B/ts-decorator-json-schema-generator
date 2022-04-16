@@ -3,11 +3,19 @@ import { JSONSchema7 } from 'json-schema';
 import { propertyNameListKey, SchemaMetadata, schemaMetadataListKey, TypeMetadata, typeMetadataKey } from './decorator';
 import { hasSuperClass, parseTypeName } from './util/util';
 
-export function generateJsonSchema(sourceClass: Constructable<any>): JSONSchema7 {
-    return generateObjectSchema(sourceClass.prototype);
+type SubschemaIncludeType = 'full' | 'anonymously' | 'reference';
+
+export interface SchemaGeneratorOptions {
+    includeSubschemas: SubschemaIncludeType | (($id: string | undefined) => SubschemaIncludeType);
 }
 
-export function generateObjectSchema(classPrototype: any, depth = 0): JSONSchema7 {
+export function generateJsonSchema(sourceClass: Constructable<any>, options?: SchemaGeneratorOptions): JSONSchema7 {
+    return generateObjectSchema(sourceClass.prototype, {
+        includeSubschemas: options?.includeSubschemas ?? 'full'
+    });
+}
+
+export function generateObjectSchema(classPrototype: any, options: SchemaGeneratorOptions, depth = 0): JSONSchema7 {
     const schema: JSONSchema7 = {
         type: 'object'
     };
@@ -18,7 +26,18 @@ export function generateObjectSchema(classPrototype: any, depth = 0): JSONSchema
 
     const propertyList: Set<string> = Reflect.getOwnMetadata(propertyNameListKey, classPrototype);
 
-    applyMetadata(depth, schema, classPrototype);
+    applyMetadata(options, depth, schema, classPrototype);
+
+    const includeSubschemaType =
+        typeof options.includeSubschemas === 'string'
+            ? options.includeSubschemas
+            : options.includeSubschemas(schema.$id);
+
+    if (depth > 0 && !!schema.$id && includeSubschemaType === 'reference') {
+        return {
+            $ref: schema.$id
+        };
+    }
 
     if (propertyList) {
         schema.properties = {};
@@ -26,22 +45,27 @@ export function generateObjectSchema(classPrototype: any, depth = 0): JSONSchema
         for (const propertyKey of propertyList) {
             const propertySchema: JSONSchema7 = {};
 
-            applyMetadata(depth, propertySchema, classPrototype, schema, propertyKey);
+            applyMetadata(options, depth, propertySchema, classPrototype, schema, propertyKey);
 
             schema.properties[propertyKey] = propertySchema;
         }
     }
 
     if (hasSuperClass(classPrototype)) {
-        const superClassSchema = generateObjectSchema(Object.getPrototypeOf(classPrototype));
+        const superClassSchema = generateObjectSchema(Object.getPrototypeOf(classPrototype), options);
 
         applySuperClassSchema(schema, superClassSchema);
+    }
+
+    if (depth > 0 && includeSubschemaType === 'anonymously') {
+        delete schema.$id;
     }
 
     return schema;
 }
 
 function applyMetadata(
+    options: SchemaGeneratorOptions,
     generatorDepth: number,
     schema: JSONSchema7,
     classPrototype: any,
@@ -59,7 +83,7 @@ function applyMetadata(
                 );
             }
 
-            Object.assign(schema, generateObjectSchema(typeClass.prototype, generatorDepth + 1));
+            Object.assign(schema, generateObjectSchema(typeClass.prototype, options, generatorDepth + 1));
         }
     }
 
@@ -69,10 +93,10 @@ function applyMetadata(
 
     if (propertyMetadataList) {
         for (const schemaMetadata of propertyMetadataList) {
-            schemaMetadata.apply(schema);
+            schemaMetadata.apply(options, schema);
 
             if (parentSchema && propertyKey) {
-                schemaMetadata.applyToParent(parentSchema, propertyKey);
+                schemaMetadata.applyToParent(options, parentSchema, propertyKey);
             }
         }
     }

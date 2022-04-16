@@ -5,6 +5,8 @@ import calendarEventSchemaJson from './schemas/calendar.schema.json';
 import arrayTestSchemaJson from './schemas/array-test.schema.json';
 import inheritanceSchemaJson from './schemas/inheritance.schema.json';
 import inheritanceSchema2Json from './schemas/inheritance-2.schema.json';
+import subschemaIncludeSchemaJson from './schemas/subschema-test.schema.json';
+import subschemaIncludeSchema2Json from './schemas/subschema-test-2.schema.json';
 import { CalendarEventSchema } from './schemaClasses/CalendarEventSchema';
 import { ArrayTestSchema } from './schemaClasses/ArrayTestSchema';
 import { ChildSchema } from './schemaClasses/ChildSchema';
@@ -32,5 +34,17 @@ describe('Generate test schemas', () => {
 
         const generatedSchema2 = generateJsonSchema(SecondChildSchema);
         expect(generatedSchema2).toEqual(inheritanceSchema2Json);
+    });
+
+    test('Test subschema include option', () => {
+        const generatedSchema = generateJsonSchema(ArrayTestSchema, {
+            includeSubschemas: 'anonymously'
+        });
+        expect(generatedSchema).toEqual(subschemaIncludeSchemaJson);
+
+        const generatedSchema2 = generateJsonSchema(ArrayTestSchema, {
+            includeSubschemas: 'reference'
+        });
+        expect(generatedSchema2).toEqual(subschemaIncludeSchema2Json);
     });
 });

@@ -8,7 +8,7 @@ type BaseJsonSchemaOptions = {
 
 export const JsonSchema = (options: Partial<BaseJsonSchemaOptions>) =>
     applySchemaMetadataClass({
-        schemaDecorator: (schema) => {
+        schemaDecorator: (generatorOptions, schema) => {
             if (options.id) {
                 schema.$id = options.id;
             }
