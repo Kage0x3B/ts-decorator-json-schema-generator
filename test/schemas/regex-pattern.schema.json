@@ -1,0 +1,17 @@
+{
+    "$id": "https://example.com/regex-pattern.schema.json",
+    "$schema": "https://json-schema.org/draft-07/schema",
+    "description": "For testing regex patterns",
+    "type": "object",
+    "properties": {
+        "countryName": {
+            "type": "string",
+            "pattern": "^Germany|France$"
+        },
+        "countryCode": {
+            "type": "string",
+            "pattern": "^[A-Za-z]{2}$"
+        }
+    },
+    "required": ["countryName", "countryCode"]
+}

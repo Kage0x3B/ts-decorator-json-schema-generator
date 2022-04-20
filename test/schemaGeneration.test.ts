@@ -7,12 +7,14 @@ import inheritanceSchemaJson from './schemas/inheritance.schema.json';
 import inheritanceSchema2Json from './schemas/inheritance-2.schema.json';
 import subschemaIncludeSchemaJson from './schemas/subschema-test.schema.json';
 import subschemaIncludeSchema2Json from './schemas/subschema-test-2.schema.json';
+import regexPatternSchemaJson from './schemas/regex-pattern.schema.json';
 import { CalendarEventSchema } from './schemaClasses/CalendarEventSchema';
 import { ArrayTestSchema } from './schemaClasses/ArrayTestSchema';
 import { ChildSchema } from './schemaClasses/ChildSchema';
 import { SecondChildSchema } from './schemaClasses/SecondChildSchema';
 import { NotSchemaClass } from './schemaClasses/NotSchemaClass';
 import { NoPropertySchemaClass } from './schemaClasses/NoPropertySchemaClass';
+import { RegexPatternSchema } from './schemaClasses/RegexPatternSchema';
 
 describe('Generate test schemas', () => {
     test('Test AddressSchema', () => {
@@ -63,5 +65,10 @@ describe('Generate test schemas', () => {
         expect(isSchemaClass(ChildSchema)).toEqual(true);
         expect(isSchemaClass(SecondChildSchema)).toEqual(true);
         expect(isSchemaClass(NoPropertySchemaClass)).toEqual(true);
+    });
+
+    test('Test regex pattern decorators', () => {
+        const generatedSchema = generateJsonSchema(RegexPatternSchema);
+        expect(generatedSchema).toEqual(regexPatternSchemaJson);
     });
 });
