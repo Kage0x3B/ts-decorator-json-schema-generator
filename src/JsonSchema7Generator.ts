@@ -142,6 +142,8 @@ function applySuperClassSchema(schema: JSONSchema7, superClassSchema: JSONSchema
     }
 
     if (superClassSchema.dependencies) {
+        schema.dependencies ??= {};
+
         Object.assign(schema.dependencies, superClassSchema.dependencies);
     }
 }
