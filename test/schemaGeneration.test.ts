@@ -8,6 +8,7 @@ import inheritanceSchema2Json from './schemas/inheritance-2.schema.json';
 import subschemaIncludeSchemaJson from './schemas/subschema-test.schema.json';
 import subschemaIncludeSchema2Json from './schemas/subschema-test-2.schema.json';
 import regexPatternSchemaJson from './schemas/regex-pattern.schema.json';
+import propertyTypesSchemaJson from './schemas/property-types.schema.json';
 import { CalendarEventSchema } from './schemaClasses/CalendarEventSchema';
 import { ArrayTestSchema } from './schemaClasses/ArrayTestSchema';
 import { ChildSchema } from './schemaClasses/ChildSchema';
@@ -15,6 +16,7 @@ import { SecondChildSchema } from './schemaClasses/SecondChildSchema';
 import { NotSchemaClass } from './schemaClasses/NotSchemaClass';
 import { NoPropertySchemaClass } from './schemaClasses/NoPropertySchemaClass';
 import { RegexPatternSchema } from './schemaClasses/RegexPatternSchema';
+import { PropertyTypesSchema } from './schemaClasses/PropertyTypesSchema';
 
 describe('Generate test schemas', () => {
     test('Test AddressSchema', () => {
@@ -70,5 +72,10 @@ describe('Generate test schemas', () => {
     test('Test regex pattern decorators', () => {
         const generatedSchema = generateJsonSchema(RegexPatternSchema);
         expect(generatedSchema).toEqual(regexPatternSchemaJson);
+    });
+
+    test('Test extracting correct property types', () => {
+        const generatedSchema = generateJsonSchema(PropertyTypesSchema);
+        expect(generatedSchema).toEqual(propertyTypesSchemaJson);
     });
 });
