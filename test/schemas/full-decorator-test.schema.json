@@ -1,0 +1,24 @@
+{
+    "$id": "https://example.com/full-decorator-test.schema.json",
+    "$schema": "https://json-schema.org/draft-07/schema",
+    "description": "Test all decorators",
+    "type": "object",
+    "required": ["someNumber"],
+    "properties": {
+        "someNumber": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 3
+        },
+        "someSecondNumber": {
+            "type": "number",
+            "minimum": 2,
+            "maximum": 4
+        },
+        "someThirdNumber": {
+            "type": "number",
+            "exclusiveMinimum": 5,
+            "exclusiveMaximum": 10
+        }
+    }
+}

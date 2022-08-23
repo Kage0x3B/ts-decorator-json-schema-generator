@@ -21,6 +21,7 @@ export * from './number/ExclusiveMin';
 export * from './number/Max';
 export * from './number/Min';
 export * from './number/MultipleOf';
+export * from './number/Range';
 export * from './object/MaxProperties';
 export * from './object/MinProperties';
 export * from './string/ContentEncoding';
