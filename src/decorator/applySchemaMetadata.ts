@@ -5,7 +5,10 @@ import { propertyNameListKey, schemaMetadataListKey, typeMetadataKey } from './M
 import { Constructable } from '../util/Constructable';
 import { JSONSchema7, JSONSchema7TypeName } from 'json-schema';
 
-export type TypeMetadata = { typeName: JSONSchema7TypeName | JSONSchema7TypeName[]; typeClass?: Constructable<any> };
+export type TypeMetadata = {
+    typeName: 'unset' | JSONSchema7TypeName | JSONSchema7TypeName[];
+    typeClass?: Constructable<any>;
+};
 
 export function applySchemaMetadata(options: SchemaMetadataOptions) {
     return applySchemaMetadataList(new SchemaMetadata(options));
@@ -46,6 +49,18 @@ export function applySchemaMetadataClass(options: SchemaMetadataOptions) {
 export function applySchemaMetadataListClass(...metadataList: SchemaMetadata[]) {
     return (target: Constructable<any>) => {
         appendMetadataList(schemaMetadataListKey, metadataList, target.prototype);
+    };
+}
+
+export function applyCompositionSchemaMetadata(options: SchemaMetadataOptions) {
+    const customTypeMetadataDecorator = applyCustomTypeMetadata({
+        typeName: 'unset'
+    });
+    const schemaMetadataListDecorator = applySchemaMetadataList(new SchemaMetadata(options));
+
+    return (target: any, propertyKey: string) => {
+        customTypeMetadataDecorator(target, propertyKey);
+        schemaMetadataListDecorator(target, propertyKey);
     };
 }
 

@@ -1,0 +1,18 @@
+{
+    "$id": "https://example.com/custom-composition-test.schema.json",
+    "$schema": "https://json-schema.org/draft-07/schema",
+    "description": "Tests custom json schema composition using the @Custom decorator https://json-schema.org/understanding-json-schema/reference/combining.html",
+    "type": "object",
+    "properties": {
+        "testString": {
+            "allOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "maxLength": 5
+                }
+            ]
+        }
+    }
+}
