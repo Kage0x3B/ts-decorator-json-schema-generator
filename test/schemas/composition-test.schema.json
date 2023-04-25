@@ -1,0 +1,56 @@
+{
+    "$id": "https://example.com/composition-test.schema.json",
+    "$schema": "https://json-schema.org/draft-07/schema",
+    "description": "Tests json schema composition https://json-schema.org/understanding-json-schema/reference/combining.html",
+    "type": "object",
+    "properties": {
+        "anyClass": {
+            "anyOf": [
+                {
+                    "$id": "https://example.com/first-subschema.schema.json",
+                    "type": "object",
+                    "properties": {
+                        "aTestValue": {
+                            "type": "number"
+                        }
+                    },
+                    "required": ["aTestValue"]
+                },
+                {
+                    "$id": "https://example.com/second-subschema.schema.json",
+                    "type": "object",
+                    "properties": {
+                        "completelyDifferentValue": {
+                            "type": "number"
+                        },
+                        "isDifferent": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": ["completelyDifferentValue"]
+                }
+            ]
+        },
+        "firstSubschemaWithExtra": {
+            "allOf": [
+                {
+                    "$id": "https://example.com/first-subschema.schema.json",
+                    "type": "object",
+                    "properties": {
+                        "aTestValue": {
+                            "type": "number"
+                        }
+                    },
+                    "required": ["aTestValue"]
+                },
+                {
+                    "properties": {
+                        "extraProperty": {
+                            "type": "number"
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}

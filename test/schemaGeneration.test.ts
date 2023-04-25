@@ -9,6 +9,8 @@ import subschemaIncludeSchemaJson from './schemas/subschema-test.schema.json';
 import subschemaIncludeSchema2Json from './schemas/subschema-test-2.schema.json';
 import regexPatternSchemaJson from './schemas/regex-pattern.schema.json';
 import fullDecoratorTestSchemaJson from './schemas/full-decorator-test.schema.json';
+import compositionTestSchemaJson from './schemas/composition-test.schema.json';
+import customCompositionTestSchemaJson from './schemas/custom-composition-test.schema.json';
 import { CalendarEventSchema } from './schemaClasses/CalendarEventSchema';
 import { ArrayTestSchema } from './schemaClasses/ArrayTestSchema';
 import { ChildSchema } from './schemaClasses/ChildSchema';
@@ -17,41 +19,40 @@ import { NotSchemaClass } from './schemaClasses/NotSchemaClass';
 import { NoPropertySchemaClass } from './schemaClasses/NoPropertySchemaClass';
 import { RegexPatternSchema } from './schemaClasses/RegexPatternSchema';
 import { FullDecoratorTestSchema } from './schemaClasses/FullDecoratorTestSchema';
+import { CustomCompositionTestSchema } from './schemaClasses/CustomCompositionTestSchema';
+import { CompositionTestSchema } from './schemaClasses/CompositionTestSchema';
 
 describe('Generate test schemas', () => {
     test('Test AddressSchema', () => {
-        const generatedSchema = generateJsonSchema(AddressSchema);
-        expect(generatedSchema).toEqual(addressSchemaJson);
+        expect(generateJsonSchema(AddressSchema)).toEqual(addressSchemaJson);
     });
 
     test('Test CalendarEventSchema', () => {
-        const generatedSchema = generateJsonSchema(CalendarEventSchema);
-        expect(generatedSchema).toEqual(calendarEventSchemaJson);
+        expect(generateJsonSchema(CalendarEventSchema)).toEqual(calendarEventSchemaJson);
     });
 
     test('Test array types', () => {
-        const generatedSchema = generateJsonSchema(ArrayTestSchema);
-        expect(generatedSchema).toEqual(arrayTestSchemaJson);
+        expect(generateJsonSchema(ArrayTestSchema)).toEqual(arrayTestSchemaJson);
     });
 
     test('Test schema inheritance', () => {
-        const generatedSchema = generateJsonSchema(ChildSchema);
-        expect(generatedSchema).toEqual(inheritanceSchemaJson);
+        expect(generateJsonSchema(ChildSchema)).toEqual(inheritanceSchemaJson);
 
-        const generatedSchema2 = generateJsonSchema(SecondChildSchema);
-        expect(generatedSchema2).toEqual(inheritanceSchema2Json);
+        expect(generateJsonSchema(SecondChildSchema)).toEqual(inheritanceSchema2Json);
     });
 
     test('Test subschema include option', () => {
-        const generatedSchema = generateJsonSchema(ArrayTestSchema, {
-            includeSubschemas: 'anonymously'
-        });
-        expect(generatedSchema).toEqual(subschemaIncludeSchemaJson);
+        expect(
+            generateJsonSchema(ArrayTestSchema, {
+                includeSubschemas: 'anonymously'
+            })
+        ).toEqual(subschemaIncludeSchemaJson);
 
-        const generatedSchema2 = generateJsonSchema(ArrayTestSchema, {
-            includeSubschemas: 'reference'
-        });
-        expect(generatedSchema2).toEqual(subschemaIncludeSchema2Json);
+        expect(
+            generateJsonSchema(ArrayTestSchema, {
+                includeSubschemas: 'reference'
+            })
+        ).toEqual(subschemaIncludeSchema2Json);
     });
 
     test('Test isSchemaClass function', () => {
@@ -70,12 +71,18 @@ describe('Generate test schemas', () => {
     });
 
     test('Test regex pattern decorators', () => {
-        const generatedSchema = generateJsonSchema(RegexPatternSchema);
-        expect(generatedSchema).toEqual(regexPatternSchemaJson);
+        expect(generateJsonSchema(RegexPatternSchema)).toEqual(regexPatternSchemaJson);
     });
 
     test('Test all decorators (currently WIP)', () => {
-        const generatedSchema = generateJsonSchema(FullDecoratorTestSchema);
-        expect(generatedSchema).toEqual(fullDecoratorTestSchemaJson);
+        expect(generateJsonSchema(FullDecoratorTestSchema)).toEqual(fullDecoratorTestSchemaJson);
+    });
+
+    test('Test custom decorator with schema composition', () => {
+        expect(generateJsonSchema(CustomCompositionTestSchema)).toEqual(customCompositionTestSchemaJson);
+    });
+
+    test('Test schema composition', () => {
+        expect(generateJsonSchema(CompositionTestSchema)).toEqual(compositionTestSchemaJson);
     });
 });
