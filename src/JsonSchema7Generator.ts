@@ -85,7 +85,9 @@ function applyMetadata(
 ) {
     if (propertyKey) {
         const { typeName, typeClass } = extractTypeProperty(classPrototype, propertyKey);
-        schema.type = typeName;
+        if (typeName !== 'unset') {
+            schema.type = typeName;
+        }
 
         if (typeName === 'object' && typeClass && typeClass.prototype) {
             if (typeClass === Object) {
