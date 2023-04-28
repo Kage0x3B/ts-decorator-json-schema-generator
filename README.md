@@ -72,6 +72,56 @@ be possible to extract the typescript type and include the property in the schem
   or `@Type(OtherSchema)`.
 - `@Enum` accepts typescript enums and automatically sets the correct accepted values and property type.
 
+### JSON schema constraints
+
+| Keyword | Status | Notes |
+|------|----|-----|
+| additionalProperties| :heavy_check_mark: | |
+| allOf| :heavy_check_mark: | |
+| anyOf| :heavy_check_mark: | |
+| const | :x: | |
+| default | :heavy_check_mark: | |
+| else| :x: |  |
+| enum| :heavy_check_mark: | |
+| properties| :x: | |
+| required | :heavy_check_mark: | |
+| then| :x: | Only matters if `if` is supplied |
+| type|  :heavy_check_mark: |  |
+| additionalItems| :x: |  |
+| items| :heavy_check_mark: | |
+| oneOf| :heavy_check_mark: |  |
+| dependencies| :heavy_check_mark: | |
+| $comment| :x: | |
+| $id| :heavy_check_mark: | |
+| $schema | :heavy_check_mark: | |
+| contentEncoding| :heavy_check_mark: | |
+| contentMediaType| :heavy_check_mark: | |
+| description| :heavy_check_mark: | |
+| examples| :x: | |
+| if| :x: | |
+| readOnly| :heavy_check_mark: | |
+| title| :heavy_check_mark: | |
+| contains| :x: | |
+| exclusiveMaximum| :heavy_check_mark: | |
+| exclusiveMinimum| :heavy_check_mark: |  |
+| format| :heavy_check_mark: ||
+| maximum| :heavy_check_mark: |  |
+| maxItems| :heavy_check_mark: | |
+| maxLength| :heavy_check_mark: |  |
+| maxProperties| :heavy_check_mark: | |
+| minimum| :heavy_check_mark: |  |
+| minItems| :heavy_check_mark: |  |
+| minLength| :heavy_check_mark: |  |
+| minProperties|  :heavy_check_mark: |  |
+| multipleOf|  :heavy_check_mark: |  |
+| not| :x: |  |
+| pattern| :heavy_check_mark: |  |
+| patternProperties| :x: |  |
+| propertyNames| :x: |  |
+| uniqueItems| :heavy_check_mark: | |
+| $ref| :heavy_check_mark: | |
+| definitions| :x:| |
+
 ## Comparison to similar libraries
 
 Similar libraries are [ts-json-schema-generator](https://github.com/vega/ts-json-schema-generator), which uses JSDoc
