@@ -2,7 +2,7 @@ export * from './array/Items';
 export * from './array/MaxItems';
 export * from './array/MinItems';
 export * from './array/UniqueItems';
-export * from './common/Custom';
+export * from './common/CustomSchema';
 export * from './common/DependentRequired';
 export * from './common/Enum';
 export * from './common/JsonSchema';
